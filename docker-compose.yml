@@ -1,0 +1,15 @@
+# version of docker compose
+version: "3.9"
+
+services:
+ app: 
+    build: # we want to build dockerfile in this current directory
+     context: .  #root directory from where we are running the command
+     args:   #set DEV=true when in development not in deployment
+     - DEV=true
+    ports:      #access network to connect to server
+     - "8000:8000"
+    volumes:    #to sync and reflect our code changes in local machine to the docker container in real time
+     - ./app:/app
+    command: >  
+       sh -c "python manage.py runserver 0.0.0.0:8000"

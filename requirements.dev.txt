@@ -1,0 +1,2 @@
+# file for only local project and not the deployed one
+flake8>=3.9.2,<3.10
