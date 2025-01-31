@@ -12,7 +12,9 @@ services:
     volumes:    #to sync and reflect our code changes in local machine to the docker container in real time
      - ./app:/app
     command: >  
-       sh -c "python manage.py runserver 0.0.0.0:8000"
+       sh -c "python manage.py wait_for_db &&
+              python manage.py migrate &&
+              python manage.py runserver 0.0.0.0:8000"
     environment:
       - DB_HOST=db
       - DB_NAME=devdb
@@ -28,6 +30,8 @@ services:
     environment:
     - POSTGRES_DB=devdb
     - POSTGRES_USER=devuser
-    - POSTGRES_PASSWORD= changeme
+    - POSTGRES_PASSWORD=changeme
+    ports:
+      - "5432:5432"  # Change host port to 5433
 volumes:
   dev-db-data:
