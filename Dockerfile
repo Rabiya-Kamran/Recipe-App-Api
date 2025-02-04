@@ -1,10 +1,10 @@
 #base image, efficient image, alpine reduces image size
-FROM python:3.9-alpine3.13 
+FROM python:3.9-alpine3.13
 
-#whoever is maitaining this dockerimage (no delay) 
+#whoever is maitaining this dockerimage (no delay)
 LABEL maintainer=""
 
-#print out directly on console without buffering 
+#print out directly on console without buffering
 ENV PYTHONBUFFERED 1
 
 #copying from host mahine to the container
@@ -19,13 +19,13 @@ EXPOSE 8000
 
 ARG DEV=false
 #running theses commands make code running more efficient
-RUN python -m venv /py && \ 
+RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     apk add --update --no-cache postgresql-client && \
     apk add --update --no-cache --virtual .tmp-build-deps \
         build-base postgresql-dev musl-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
-    if [ $DEV=  "true "]; \
+    if [ $DEV = "true"]; \
         then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
     fi && \
     rm -rf /tmp && \
