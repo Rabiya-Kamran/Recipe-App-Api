@@ -1,7 +1,7 @@
 """
 Database Models
 """
-
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,  # for authentication
@@ -49,3 +49,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     # for linkage to user model objects = UserManager()
     objects = UserManager()
     USERNAME_FIELD = 'email'  # sets as unique
+
+
+# Model is base class
+class Recipe(models.Model):
+    """Recipe object."""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,  # if user gets deleted also delete recipes
+    )
+    title = models.CharField(max_length=255)
+    # TextField designed to hold more content but not that fast
+    description = models.TextField(blank=True)
+    time_minutes = models.IntegerField()
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+    link = models.CharField(max_length=255, blank=True)
+
+    # string representation of object as titles
+    def __str__(self):
+        return self.title

@@ -27,8 +27,10 @@ urlpatterns = [
         'api/docs',
         # This creates interactive API documentation
         # at /api/docs using Swagger UI
+        # also shows docstrings of APIs on UI Side
         SpectacularSwaggerView.as_view(url_name='api-schema'),
         name='api-docs',
         ),
     path('api/user/', include('user.urls')),
+    path('api/recipe/', include('recipe.urls')),
 ]
