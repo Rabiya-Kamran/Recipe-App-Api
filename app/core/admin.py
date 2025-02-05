@@ -53,3 +53,4 @@ class UserAdmin(BaseUserAdmin):  # manages the display of users in admin
 # and managing users in the admin
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Recipe)
+admin.site.register(models.Tag)

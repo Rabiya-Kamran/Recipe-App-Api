@@ -1,7 +1,7 @@
 """
 Serializers for the user API View.
 """
-from rest_framework.authtoken.models import Token
+
 from django.contrib.auth import (
     get_user_model,
     authenticate,
@@ -69,12 +69,6 @@ class AuthTokenSerializer(serializers.Serializer):
         )
         if not user:
             msg = _('Unable to aunthenticate wth provided credentials')
-            print(msg)
             raise serializers.ValidationError(msg, code='authorization')
-
-        token, created = Token.objects.get_or_create(user=user)
-        print(f"Generated Token: {token.key, created}")
-
         attrs['user'] = user
-
         return attrs
