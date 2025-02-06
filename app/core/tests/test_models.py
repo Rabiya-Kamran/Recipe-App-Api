@@ -1,6 +1,7 @@
 """
 Tests for models
 """
+from unittest.mock import patch
 from decimal import Decimal  # to store values
 
 from django.test import TestCase
@@ -99,3 +100,19 @@ class ModelTests(TestCase):
         )
 
         self.assertEqual(str(ingredient), ingredient.name)
+
+# uuid4() is typically used to generate a random unique identifier
+# dacorator to patching or replacing the actual uuid4 function with
+# a "mocked" version for the duration of the test
+    @patch('core.models.uuid.uuid4')
+    def test_recipe_file_name_uuid(self, mock_uuid):
+        """Test generating image path"""
+        uuid = 'test-uuid'
+# Whenever uuid4() is called during this test,
+# just return 'test-uuid'
+        mock_uuid.return_value = uuid
+# This function takes an image name and generates a file path,
+# but it will use uuid4() to make the path unique.
+        file_path = models.recipe_image_file_path(None, 'example.jpg')
+#  the test checks that the generated file path is what you expect
+        self.assertEqual(file_path, f'uploads/recipe/{uuid}.jpg')

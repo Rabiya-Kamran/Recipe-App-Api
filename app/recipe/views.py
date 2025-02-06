@@ -3,7 +3,11 @@ Views for recipe APIs
 """
 from rest_framework import (
     viewsets,
-    mixins,)
+    mixins,
+    status,
+    )
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -40,11 +44,28 @@ class RecipeViewSet(viewsets.ModelViewSet):
         # else call RecipeDetailSerializer
         if self.action == 'list':
             return serializers.RecipeSerializer
+        elif self.action == 'upload_image':
+            return serializers.RecipeImageSerializer
         return self.serializer_class
 
     def perform_create(self, serializer):
         """Create a new recipe"""
         serializer.save(user=self.request.user)
+
+# The URL for this action will be: /api/recipes/{id}/upload_image/
+# where {id} is the recipe’s ID.
+    @action(methods=['POST'], detail=True, url_path='upload_image')
+    def upload_image(self, request, pk=None):
+        """Uplod an image to recipe"""
+# fetches the recipe instance with the given pk (passed in the URL).
+        recipe = self.get_object()
+# Uses a serializer to validate and process the uploaded image.
+        serializer = self.get_serializer(recipe, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # ListModelMixin allows to add mixin functionality

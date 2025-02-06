@@ -2,7 +2,7 @@
 version: "3.9"
 
 services:
-  app: 
+  app:
     build: # we want to build dockerfile in this current directory
      context: .  #root directory from where we are running the command
      args:   #set DEV=true when in development not in deployment
@@ -11,7 +11,8 @@ services:
      - "8000:8000"
     volumes:    #to sync and reflect our code changes in local machine to the docker container in real time
      - ./app:/app
-    command: >  
+     - dev-static-data:/vol/web
+    command: >
        sh -c "python manage.py wait_for_db &&
               python manage.py migrate &&
               python manage.py runserver 0.0.0.0:8000"
@@ -22,8 +23,8 @@ services:
       - DB_PASS=changeme
 
     depends_on:
-      - db 
-  db: 
+      - db
+  db:
     image: postgres:13-alpine
     volumes:
       - dev-db-data:/var/lib/postgresql/data
@@ -35,3 +36,4 @@ services:
       - "5432:5432"  # Change host port to 5433
 volumes:
   dev-db-data:
+  dev-static-data:
